@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
+
+    <style>
+
+    </style>
+
+    <title>Vaccine Tracker By LK</title>
+</head>
+
+<body>
+    <nav class="navbar navbar-dark bg-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand">Vaccine Tracker MBJ</a>
+
+        </div>
+    </nav>
+       
+    <hr>
+    <h1>Show Vaccine Data At Real Time By 1 click </h1>
+    <hr>
+    <hr>
+    <div class="date mt-2">
+        
+        <input class="mx-5 my-2 d-block" type="number" id="day" placeholder="Enter Day dd" format="dd-mm-yy">
+        <input class="mx-5 my-2 d-block" type="number" id="month" placeholder="Enter Month mm" format="dd-mm-yy">
+        <input class="mx-5 my-2 d-block" type="number" id="year" placeholder="Enter Year yy" format="dd-mm-yy" value="2021">
+    </div>
+    <button type="button" class="btn btn-primary btn-sm lm-2 mt-3 d-block mx-5" id="dataBtn">Fetch MBJ Vaccine Data</button>
+    <hr>
+    <div id="table">
+    </div>
+    <!-- On tables -->
+
+    <!-- Optional JavaScript; choose one of the two! -->
+
+    <!-- Option 1: Bootstrap Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4"
+        crossorigin="anonymous"></script>
+    <script>
+        console.log("started");
+        
+        
+        let dataBtn = document.getElementById("dataBtn")
+        dataBtn.addEventListener("click", showF)
+        
+        function showF() {
+            let day = document.getElementById("day").value
+            let month = document.getElementById("month").value
+            let year = document.getElementById("year").value
+            // console.log(year);
+           
+            url = `https://cdn-api.co-vin.in/api/v2/appointment/sessions/public/findByDistrict?district_id=456&date=${day}-${month}-${year}`;
+            // console.log(url);
+            fetch(url).then((response) => {
+                return response.json();
+            }).then((data) => {
+                let i;
+                for (i = 0; i < data.sessions.length; i++) {
+        
+                        let table = document.getElementById("table")
+                    // console.log(table);
+                    if (data.sessions[i].available_capacity != 0){
+                         table.innerHTML += 
+                    `<div class="card text-center bg-success mx-5 my-1">
+                         <div class="card-header bg-dark text-light"><h1>${data.sessions[i].address}</h1></div>
+                        <div class="card-body text-light">
+                        <h5 class="card-title">VACCINATION CENTRE-${data.sessions[i].name}</h5>
+                        <h5 class="card-title">AGE-${data.sessions[i].min_age_limit}</h5>
+                        <h5 class="card-title">VACCINE CAPACITY-${data.sessions[i].available_capacity}</h5>
+                        <h5 class="card-title">DISTRICT NAME-${data.sessions[i].district_name}</h5>
+                            </div>
+                            `;
+                    }
+                    else{
+                        table.innerHTML += 
+                        `<div class="card text-center bg-danger mx-5 my-1 ">
+                         <div class="card-header bg-dark text-light"><h1>${data.sessions[i].address}</h1></div>
+                        <div class="card-body text-light">
+                        <h5 class="card-title">VACCINATION CENTRE-${data.sessions[i].name}</h5>
+                        <h5 class="card-title ">AGE-${data.sessions[i].min_age_limit}</h5>
+                        <h5 class="card-title">VACCINE CAPACITY-${data.sessions[i].available_capacity}</h5>
+                        <h5 class="card-title ">DISTRICT NAME-${data.sessions[i].district_name}</h5>
+                            </div>
+                            `;
+
+                    }
+        
+                }
+        
+            })
+            
+        }
+        
+        
+        </script>
+
+</body>
+
+</html>
